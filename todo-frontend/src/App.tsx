@@ -4,63 +4,59 @@ import "./App.css";
 function App() {
   const [todos, setTodos] = useState([]);
 
-  function getAllTodos() {
-    fetch("http://localhost:3000/todos", {
-      method: "GET",
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setTodos(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        return error;
+  async function getAllTodos() {
+    try {
+      const response = await fetch("http://localhost:3000/todos", {
+        method: "GET",
       });
+      const data = await response.json();
+      setTodos(data);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  function postTodos() {
-    const title = (document.getElementById("title") as HTMLInputElement).value;
-    const description = (
-      document.getElementById("description") as HTMLInputElement
-    ).value;
-    const completed = (document.getElementById("completed") as HTMLInputElement)
-      .value;
+  async function postTodos() {
+    try {
+      const title = (document.getElementById("title") as HTMLInputElement)
+        .value;
+      const description = (
+        document.getElementById("description") as HTMLInputElement
+      ).value;
+      const completed = (
+        document.getElementById("completed") as HTMLInputElement
+      ).value;
 
-    fetch("http://localhost:3000/todos", {
-      method: "POST",
-      body: JSON.stringify({
-        title: title,
-        description: description,
-        completed: completed,
-      }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        getAllTodos();
-      })
-      .catch((error) => {
-        console.log(error);
-        return error;
+      const response = await fetch("http://localhost:3000/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: title,
+          description: description,
+          completed: completed,
+        }),
       });
+      const data = await response.json();
+      console.log(data);
+      getAllTodos();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  function deleteTodo(id: number) {
-    fetch(`http://localhost:3000/todos/${id}`, {
-      method: "DELETE",
-    })
-      .then((response) => {
-        console.log(response);
-        getAllTodos();
-      })
-      .catch((error) => {
-        console.log(error);
-        return error;
+  async function deleteTodo(id: number) {
+    try {
+      const response = await fetch(`http://localhost:3000/todos/${id}`, {
+        method: "DELETE",
       });
+      const data = await response.text();
+      console.log(data);
+      getAllTodos();
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   useEffect(() => {
