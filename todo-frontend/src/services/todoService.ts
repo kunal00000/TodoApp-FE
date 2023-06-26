@@ -1,8 +1,10 @@
-import { TodoSchema, Todo } from "@/types/todo";
+import { TodoSchema, Todo } from "../types/todo";
+
+const API_BASE_URL = "http://localhost:3000";
 
 export async function getAllTodos() {
   try {
-    const response = await fetch("http://localhost:3000/todos", {
+    const response = await fetch(`${API_BASE_URL}/todos`, {
       method: "GET",
     });
 
@@ -10,25 +12,25 @@ export async function getAllTodos() {
     const todosArray = TodoSchema.array().parse(data);
     return todosArray as Todo[];
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 
 export async function getTodoByID(id: number) {
   try {
-    const response = await fetch(`http://localhost:3000/todos/${id}`);
+    const response = await fetch(`${API_BASE_URL}/todos/${id}`);
     const data = await response.json();
     const parsedTodo = TodoSchema.parse(data);
     return parsedTodo;
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 
 export async function postTodos(todo: Todo) {
   // Todo should be parsed while taking input
   try {
-    const response = await fetch("http://localhost:3000/todos", {
+    const response = await fetch(`${API_BASE_URL}/todos`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,18 +41,18 @@ export async function postTodos(todo: Todo) {
         status: todo.status,
       }),
     });
-
+    // Todo: Show success Notification
     const postedTodo = await response.json();
     return postedTodo; // Todo added
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 
 export async function updateTodoByID(newTodo: Todo) {
   // Todo should be parsed while taking input
   try {
-    const response = await fetch(`http://localhost:3000/todos/${newTodo.id}`, {
+    const response = await fetch(`${API_BASE_URL}/todos/${newTodo.id}`, {
       method: "PUT",
       body: JSON.stringify({
         title: newTodo.title,
@@ -58,22 +60,24 @@ export async function updateTodoByID(newTodo: Todo) {
         status: newTodo.status,
       }),
     });
+    // Todo: Show success Notification
 
     const updatedTodo = await response.json();
     return updatedTodo;
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 
 export async function deleteTodo(id: number) {
   try {
-    const response = await fetch(`http://localhost:3000/todos/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
       method: "DELETE",
     });
+    // Todo: Show success Notification
     const data = await response.text();
     console.log(data); // Deleted
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }

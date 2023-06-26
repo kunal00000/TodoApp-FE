@@ -9,7 +9,7 @@ export const TodoSchema = z
       .max(30, { message: "Must be 30 or fewer characters long" }),
     description: z.string().optional(),
     status: z.enum(["Completed", "Pending"]),
-    updatedAt: z.date(),
+    updatedAt: z.string().datetime(),
   })
   .strict();
 
